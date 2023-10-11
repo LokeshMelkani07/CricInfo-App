@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-const Header = ({ theme, setTheme }) => {
+import ThemeContext from "../utils/ThemeContext";
+
+const Header = () => {
+  const { theme, toggleTheme } = useContext(ThemeContext);
   return (
     <nav className="bg-purple-600 p-3 flex justify-between items-center">
       {/* Left Section - Logo */}
@@ -49,14 +52,10 @@ const Header = ({ theme, setTheme }) => {
       {/* Right Section - Login, Signup, and Dark/Light Mode Button */}
       <div className="space-x-4">
         <button className="text-white">
-          {theme == "white" && (
-            <i className="fas fa-sun mx-2" onClick={() => setTheme("dark")}></i>
-          )}
-          {theme == "dark" && (
-            <i
-              className="fas fa-moon mx-2"
-              onClick={() => setTheme("white")}
-            ></i>
+          {theme == false ? (
+            <i className="fas fa-sun mx-2" onClick={toggleTheme}></i>
+          ) : (
+            <i className="fas fa-moon mx-2" onClick={toggleTheme}></i>
           )}
         </button>
         <Link

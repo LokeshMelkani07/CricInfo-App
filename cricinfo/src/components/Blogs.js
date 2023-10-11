@@ -1,12 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
+import ThemeContext from "../utils/ThemeContext";
 
-const Blogs = ({ theme }) => {
+const Blogs = () => {
+  const { theme } = useContext(ThemeContext);
   return (
     <div
-      className={`p-4 bg-black ${
-        theme == "white"
-          ? "bg-white-300 text-black-700"
-          : "bg-black-300 text-white-700"
+      className={`p-4 ${
+        theme === false ? "bg-white text-black-700" : "bg-black text-white"
       }`}
     >
       Blogs
