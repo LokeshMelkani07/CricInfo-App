@@ -1,17 +1,20 @@
-import React from "react";
+import React, { Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Videos from "./components/Videos";
-import Blogs from "./components/Blogs";
 import MyCar from "./components/MyCar";
 import ErrorPage from "./components/ErrorPage";
 import Body from "./components/Body";
-import Login from "./components/Login";
-import SignUp from "./components/SignUp";
 
+import { lazy } from "react";
+import ShimmerCard from "./components/Shimmer";
+
+const Blogs = lazy(() => import("../src/components/Blogs"));
+const Videos = lazy(() => import("../src/components/Videos"));
+const Register = lazy(() => import("../src/components/Register"));
+const Login = lazy(() => import("../src/components/Login"));
 const router = createBrowserRouter([
   {
     path: "/",
@@ -24,11 +27,19 @@ const router = createBrowserRouter([
       },
       {
         path: "/blogs",
-        element: <Blogs />,
+        element: (
+          <Suspense fallback={<ShimmerCard />}>
+            <Blogs />
+          </Suspense>
+        ),
       },
       {
         path: "/videos",
-        element: <Videos />,
+        element: (
+          <Suspense fallback={<ShimmerCard />}>
+            <Videos />
+          </Suspense>
+        ),
       },
       {
         path: "/mycar",
@@ -36,11 +47,19 @@ const router = createBrowserRouter([
       },
       {
         path: "/login",
-        element: <Login />,
+        element: (
+          <Suspense fallback={<ShimmerCard />}>
+            <Login />
+          </Suspense>
+        ),
       },
       {
         path: "/signup",
-        element: <SignUp />,
+        element: (
+          <Suspense fallback={<ShimmerCard />}>
+            <Register />
+          </Suspense>
+        ),
       },
     ],
   },

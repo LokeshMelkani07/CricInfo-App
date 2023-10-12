@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
@@ -10,7 +10,6 @@ function App() {
   const toggleTheme = () => {
     setTheme((previousValue) => !previousValue);
   };
-
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
       <Header />

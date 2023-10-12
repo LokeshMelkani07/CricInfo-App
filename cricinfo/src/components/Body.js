@@ -4,6 +4,7 @@ import roadSafetyImage3 from "../assets/images/road1.png";
 import roadSafetyImage4 from "../assets/images/roadSafety4.jpg";
 import ThemeContext from "../utils/ThemeContext";
 import { Carousel } from "react-bootstrap";
+import BodyInformation from "./BodyInformation";
 
 const Body = () => {
   const { theme } = useContext(ThemeContext);
@@ -40,6 +41,7 @@ const Body = () => {
           </Carousel>
         </div>
       </div>
+      <BodyInformation />
     </div>
   );
 };
