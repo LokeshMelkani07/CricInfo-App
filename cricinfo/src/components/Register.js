@@ -4,6 +4,9 @@ import * as Yup from "yup";
 import ThemeContext from "../utils/ThemeContext";
 import { auth } from "../utils/firebase";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 const SignupSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
@@ -20,25 +23,26 @@ const SignupSchema = Yup.object().shape({
   ),
 });
 
-const handleSignup = async (values) => {
-  try {
-    const userCredential = await createUserWithEmailAndPassword(
-      auth,
-      values.email,
-      values.password
-    ); // Use createUserWithEmailAndPassword function from Firebase SDK
-    const user = userCredential.user;
-    console.log("User signed up:", user);
-  } catch (error) {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    console.error("Error:", errorCode, errorMessage);
-  }
-};
-
 const Register = () => {
   const { theme } = useContext(ThemeContext);
+  const navigate = useNavigate();
   const auth = getAuth();
+
+  const handleSignup = async (values) => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        values.email,
+        values.password
+      );
+      toast.success("Signed Up, Successfully");
+      navigate("/login");
+    } catch (error) {
+      const errorCode = error.code;
+      toast.error(`${errorCode}`);
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-purple-600">
       <Formik
@@ -213,6 +217,11 @@ const Register = () => {
             >
               Sign Up
             </button>
+          </div>
+          <div className="text-center">
+            <Link className="text-purple-600 hover:underline" to="/login">
+              Already have an account? Log in
+            </Link>
           </div>
         </Form>
       </Formik>

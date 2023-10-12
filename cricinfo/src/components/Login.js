@@ -4,6 +4,9 @@ import * as Yup from "yup";
 import ThemeContext from "../utils/ThemeContext";
 import { auth } from "../utils/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Email is required"),
@@ -12,18 +15,24 @@ const LoginSchema = Yup.object().shape({
 
 const Login = () => {
   const { theme } = useContext(ThemeContext);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = async (values) => {
     try {
-      await signInWithEmailAndPassword(auth, values.email, values.password);
-      console.log("User signed in successfully!");
-      // You can redirect to another page or take additional actions here
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        values.email,
+        values.password
+      );
+      const user = await userCredential.user;
+      console.log("User signed in successfully!", user);
+      console.log("User token!", user.accessToken);
+      localStorage.setItem("token", user.accessToken);
+      toast.success("Logged In, Successfully!");
+      navigate("/");
     } catch (error) {
       const errorCode = error.code;
-      const errorMessage = error.message;
-      console.error("Error:", errorCode, errorMessage);
+      toast.error(`${errorCode}`);
     }
   };
 
@@ -56,8 +65,6 @@ const Login = () => {
               type="email"
               id="email"
               name="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
             />
             <ErrorMessage
               name="email"
@@ -80,8 +87,6 @@ const Login = () => {
               type="password"
               id="password"
               name="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
             />
             <ErrorMessage
               name="password"
@@ -97,6 +102,11 @@ const Login = () => {
             >
               Log In
             </button>
+          </div>
+          <div className="text-center">
+            <Link to="/signup" className="text-purple-600 hover:underline">
+              Don't have an account? Sign Up
+            </Link>
           </div>
         </Form>
       </Formik>

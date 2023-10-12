@@ -1,9 +1,18 @@
-import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useEffect } from "react";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import ThemeContext from "../utils/ThemeContext";
 
 const Header = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
+  const token = localStorage.getItem("token");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!token) {
+      navigate("/signup");
+    }
+  }, []);
+
   return (
     <nav className="bg-purple-600 p-3 flex justify-between items-center">
       {/* Left Section - Logo */}
@@ -58,18 +67,29 @@ const Header = () => {
             <i className="fas fa-moon mx-2" onClick={toggleTheme}></i>
           )}
         </button>
-        <Link
-          to="/login"
-          className="text-white border rounded-full border-white py-1 px-4 hover:bg-black hover:text-black text-decoration-none"
-        >
-          Login
-        </Link>
-        <Link
-          to="/signup"
-          className="text-white border rounded-full border-white py-1 px-4 hover:bg-black hover:text-black text-decoration-none"
-        >
-          Signup
-        </Link>
+        {token ? (
+          <Link
+            className="text-white border rounded-full border-white py-1 px-4 hover:bg-black hover:text-black text-decoration-none"
+            onClick={() => localStorage.removeItem("token")}
+          >
+            Logout
+          </Link>
+        ) : (
+          <>
+            <Link
+              to="/login"
+              className="text-white border rounded-full border-white py-1 px-4 hover:bg-black hover:text-black text-decoration-none"
+            >
+              Login
+            </Link>
+            <Link
+              to="/signup"
+              className="text-white border rounded-full border-white py-1 px-4 hover:bg-black hover:text-black text-decoration-none"
+            >
+              Signup
+            </Link>
+          </>
+        )}
       </div>
     </nav>
   );

@@ -9,6 +9,7 @@ const Blogs = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [filteredArticles, setFilteredArticles] = useState([]);
+  const apiKey = process.env.REACT_APP_NEWS_API_KEY;
 
   useEffect(() => {
     fetchData();
@@ -17,7 +18,7 @@ const Blogs = () => {
   const fetchData = async () => {
     setIsLoading(true);
     const data = await fetch(
-      "https://newsapi.org/v2/everything?q=road%20accidents%20road%20safety&from=2023-09-12&sortBy=publishedAt&apiKey=0c03bd8808cf4edd95ceb51beb3e5f3a&pageSize=50&page=1"
+      `https://newsapi.org/v2/everything?q=road%20accidents%20road%20safety&from=2023-09-12&sortBy=publishedAt&apiKey=${apiKey}&pageSize=50&page=1`
     );
     const res = await data.json();
     setArticles(res.articles);

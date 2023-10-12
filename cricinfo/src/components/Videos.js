@@ -1,14 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
-import { API_KEY } from "../utils/constants";
-import { searchQuery } from "../utils/constants";
 import VideoCard from "./VideoCard";
 import ThemeContext from "../utils/ThemeContext";
 import ShimmerCard from "./Shimmer";
 
 const Videos = () => {
   const { theme } = useContext(ThemeContext);
-  const maxResults = 20;
-  const apiUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${searchQuery}&type=video&key=${API_KEY}&maxResults=${maxResults}`;
+  const apikey = process.env.REACT_APP_YOUTUBE_API_KEY;
+  const query = "road safety awareness video";
+  const result = 20;
+  const apiUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${query}&type=video&key=${apikey}&maxResults=${result}`;
 
   const [videos, setVideos] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
