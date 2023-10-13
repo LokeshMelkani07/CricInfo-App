@@ -1,5 +1,5 @@
-import React, { useContext, useState } from "react";
-import { Formik, Field, Form, ErrorMessage } from "formik";
+import React, { useContext, useState, useRef } from "react";
+import { Formik, Field, Form, ErrorMessage, setFieldValue } from "formik";
 import * as Yup from "yup";
 import ThemeContext from "../utils/ThemeContext";
 import { auth } from "../utils/firebase";
@@ -7,9 +7,16 @@ import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import { db } from "../utils/firebase";
+import { getDatabase, set } from "firebase/database";
+import { ref as sref } from "firebase/database";
+import { ref } from "firebase/storage";
+import { uploadBytes, getDownloadURL } from "firebase/storage";
+import { getStorage } from "firebase/storage";
 
 const SignupSchema = Yup.object().shape({
-  name: Yup.string().required("Name is required"),
+  name: Yup.string().required("First Name is required"),
+  lastname: Yup.string().required("Last Name is required"),
   email: Yup.string().email("Invalid email").required("Email is required"),
   password: Yup.string().required("Password is required"),
   confirmPassword: Yup.string()
@@ -26,15 +33,28 @@ const SignupSchema = Yup.object().shape({
 const Register = () => {
   const { theme } = useContext(ThemeContext);
   const navigate = useNavigate();
+  const [imageLink, setImageLink] = useState(null);
+  const valuesRef = useRef(null); // Define a ref to store values
   const auth = getAuth();
 
   const handleSignup = async (values) => {
     try {
+      console.log("handle signup trigger");
+      console.log("values is ", valuesRef.current);
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         values.email,
         values.password
       );
+
+      // Update the value of DP in values object and send it to db
+      // Update the displayPicture field in Formik
+
+      const db = getDatabase();
+      set(sref(db, `users/${values.name}`), {
+        ...values,
+        displayPicture: valuesRef.current.displayPicture,
+      });
       toast.success("Signed Up, Successfully");
       navigate("/login");
     } catch (error) {
@@ -43,17 +63,49 @@ const Register = () => {
     }
   };
 
+  const handleImageChange = async (e) => {
+    try {
+      // Using firebase storage to create a URL for the display image and store it in Firebase Storage
+      const storage = getStorage();
+      const file = e.target.files[0];
+
+      // ref to where our image will be stored
+      const storageRef = ref(storage, `users/image`);
+
+      // Upload the image
+      const snapshot = await uploadBytes(storageRef, file);
+      console.log("Image uploaded!");
+
+      // Get the download URL
+      const downloadURL = await getDownloadURL(storageRef);
+
+      // After the file is uploaded, set the download URL to the imageLink state or handle it as needed
+      setImageLink(downloadURL);
+
+      // Assign values to the ref
+      valuesRef.current = {
+        ...valuesRef.current,
+        displayPicture: downloadURL,
+      };
+      console.log("valueref is ", valuesRef.current);
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-purple-600">
       <Formik
         initialValues={{
           name: "",
+          lastname: "",
           email: "",
           password: "",
           confirmPassword: "",
           dlNumber: "",
           rfidUid: "",
           checkbox: false,
+          displayPicture: "",
         }}
         validationSchema={SignupSchema}
         onSubmit={handleSignup}
@@ -65,12 +117,27 @@ const Register = () => {
         >
           <div className="mb-4">
             <label
+              htmlFor="displayPicture"
+              className="block text-gray-800 text-sm font-bold mb-2"
+            >
+              Display Picture
+            </label>
+            <input
+              type="file"
+              id="displayPicture"
+              name="displayPicture"
+              accept="image/png, image/jpeg"
+              onChange={handleImageChange}
+            />
+          </div>
+          <div className="mb-4">
+            <label
               className={`block text-gray-800 text-sm font-bold mb-2 ${
                 theme === false ? "text-black-700" : "text-white"
               }`}
               htmlFor="name"
             >
-              Name
+              First Name
             </label>
             <Field
               className="w-full px-3 py-2 border rounded appearance-none"
@@ -80,6 +147,27 @@ const Register = () => {
             />
             <ErrorMessage
               name="name"
+              component="div"
+              className="text-red-500 text-xs"
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              className={`block text-gray-800 text-sm font-bold mb-2 ${
+                theme === false ? "text-black-700" : "text-white"
+              }`}
+              htmlFor="lastname"
+            >
+              Last Name
+            </label>
+            <Field
+              className="w-full px-3 py-2 border rounded appearance-none"
+              type="text"
+              id="lastname"
+              name="lastname"
+            />
+            <ErrorMessage
+              name="lastname"
               component="div"
               className="text-red-500 text-xs"
             />

@@ -70,7 +70,10 @@ const Header = () => {
         {token ? (
           <Link
             className="text-white border rounded-full border-white py-1 px-4 hover:bg-black hover:text-black text-decoration-none"
-            onClick={() => localStorage.removeItem("token")}
+            onClick={() => {
+              localStorage.removeItem("token");
+              localStorage.removeItem("unique");
+            }}
           >
             Logout
           </Link>
