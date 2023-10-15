@@ -7,6 +7,8 @@ import {
 } from "firebase/storage";
 import ThemeContext from "../utils/ThemeContext";
 import PermissionModal from "./PermissionModal";
+import { db } from "../utils/firebase";
+import { storage } from "../utils/firebase";
 
 const UserProfile = () => {
   const { theme } = useContext(ThemeContext);
@@ -16,7 +18,9 @@ const UserProfile = () => {
 
   useEffect(() => {
     // Fetch the unique keyword from LocalStorage
+    console.log("Inside here");
     const uniqueKeyword = localStorage.getItem("unique");
+    console.log("unique key ", uniqueKeyword);
 
     if (uniqueKeyword) {
       // Initialize Firebase database and storage
@@ -25,6 +29,7 @@ const UserProfile = () => {
 
       // Reference to the user's data in the Firebase database
       const userRef = ref(db, `users/${uniqueKeyword}`);
+      console.log("Userref ", userRef);
 
       // Fetch user data from the database
       get(userRef)
@@ -64,6 +69,19 @@ const UserProfile = () => {
     setShowPermissionModal(true);
   };
 
+  if (!localStorage.getItem("unique")) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-400 text-white">
+        <div className="text-center">
+          <p className="text-2xl font-bold text-red-600">
+            <span className="text-3xl">407</span> <br />{" "}
+            <span className="text-black">Authentication Required</span>
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-purple-600 text-black">
       <div
@@ -85,23 +103,23 @@ const UserProfile = () => {
         </div>
         <div className="mb-4">
           <p>
-            <span className="font-semibold">Name:</span> {userData.name}
+            <span className="font-semibold">Name:</span> {userData?.name}
           </p>
         </div>
         <div className="mb-4">
           <p>
-            <span className="font-semibold">Email:</span> {userData.email}
+            <span className="font-semibold">Email:</span> {userData?.email}
           </p>
         </div>
         <div className="mb-4">
           <p>
             <span className="font-semibold">DL Number:</span>{" "}
-            {userData.dlNumber}
+            {userData?.dlNumber}
           </p>
         </div>
         <div className="mb-4">
           <p>
-            <span className="font-semibold">RFID UID:</span> {userData.rfidUid}
+            <span className="font-semibold">RFID UID:</span> {userData?.rfidUid}
           </p>
         </div>
         <button

@@ -18,11 +18,12 @@ const Blogs = () => {
   const fetchData = async () => {
     setIsLoading(true);
     const data = await fetch(
-      `https://newsapi.org/v2/everything?q=road%20accidents%20road%20safety&from=2023-09-12&sortBy=publishedAt&apiKey=${apiKey}&pageSize=50&page=1`
+      `https://newsapi.org/v2/everything?q=road%20accidents%20road%20safety&sortBy=publishedAt&apiKey=${apiKey}&pageSize=50&page=1`
     );
     const res = await data.json();
     setArticles(res.articles);
     setFilteredArticles(res.articles);
+    console.log("filter articles ", filteredArticles);
     setIsLoading(false);
   };
 

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 
 const PermissionModal = ({ setShowPermissionModal }) => {
   const [visible, setVisible] = useState(true);
@@ -10,6 +11,11 @@ const PermissionModal = ({ setShowPermissionModal }) => {
     console.log("Permission Type:", permissionType);
     console.log("New RFID:", newRFID);
     console.log("Time Range:", timeRange);
+    if (permissionType === "permanent") {
+      toast.success(`Permission Granted to RFID ${newRFID}`);
+    } else {
+      toast.success(`Permission Granted to RFID ${newRFID} for ${timeRange}`);
+    }
     setShowPermissionModal(false);
   };
 
@@ -50,7 +56,7 @@ const PermissionModal = ({ setShowPermissionModal }) => {
                 name="newRFID"
                 value={newRFID}
                 onChange={(e) => setNewRFID(e.target.value)}
-                className="block w-full border-gray-300 rounded-md"
+                className="block w-full border-gray-300 rounded-md p-1"
               />
             </div>
           )}
@@ -65,7 +71,7 @@ const PermissionModal = ({ setShowPermissionModal }) => {
                 name="newRFID"
                 value={newRFID}
                 onChange={(e) => setNewRFID(e.target.value)}
-                className="block w-full border-gray-300 rounded-md"
+                className="block w-full border-gray-300 rounded-md p-1"
               />
               <label htmlFor="timeRange" className="block font-medium mb-2">
                 Time Range
