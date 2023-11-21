@@ -26,18 +26,21 @@ const PermissionModal = ({
     } else {
       // const timeInMillis = getTimeInMillis(timeRange);
       setTimeout(async () => {
-        await set(ref(database, `users/${uniqueKeyword}/rfidUid`), rfid);
-        console.log("time  vvdf", timeRange);
+        // await set(ref(database, `users/${uniqueKeyword}/rfidUid`), newRFID);
+
+        // console.log("time  vvdf", timeRange);
         toast.info(
           `Temporary access for RFID ${newRFID} expired. Reverted to original RFID.`
         );
         const updatedUserData = { ...userData, rfidUid: rfid };
+        await set(ref(database, `users/${uniqueKeyword}/rfidUid`), rfid);
         updateUserData(updatedUserData);
       }, timeRange);
       toast.success(`Permission Granted to RFID ${newRFID}`);
       // await set(ref(database, `users/${uniqueKeyword}/rfidUid`), newRFID);
     }
     setShowPermissionModal(false);
+    set(ref(database, `users/${uniqueKeyword}/rfidUid`), newRFID);
     const updatedUserData = { ...userData, rfidUid: newRFID };
     updateUserData(updatedUserData);
   };
