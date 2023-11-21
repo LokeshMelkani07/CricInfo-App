@@ -38,6 +38,7 @@ const UserProfile = () => {
             // User data found
             const userData = snapshot.val();
             setUserData(userData);
+            // console.log("userrrrrrrrrrr", userData.rfidUid);
 
             if (userData.displayPicture) {
               // If a display picture URL is available, fetch the image
@@ -67,6 +68,10 @@ const UserProfile = () => {
   const handleGeneratePermission = () => {
     console.log(showPermissionModal);
     setShowPermissionModal(true);
+  };
+
+  const updateUserData = (newUserData) => {
+    setUserData(newUserData);
   };
 
   if (!localStorage.getItem("unique")) {
@@ -132,7 +137,11 @@ const UserProfile = () => {
         </button>
       </div>
       {showPermissionModal && (
-        <PermissionModal setShowPermissionModal={setShowPermissionModal} />
+        <PermissionModal
+          setShowPermissionModal={setShowPermissionModal}
+          updateUserData={updateUserData}
+          userData={userData}
+        />
       )}
     </div>
   );

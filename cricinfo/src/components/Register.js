@@ -55,6 +55,7 @@ const Register = () => {
         ...values,
         displayPicture: valuesRef.current.displayPicture,
       });
+      localStorage.setItem("old_rfid", values.rfidUid);
       toast.success("Signed Up, Successfully");
       navigate("/login");
     } catch (error) {

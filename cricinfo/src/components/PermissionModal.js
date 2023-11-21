@@ -1,22 +1,45 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+import { getDatabase, ref, set } from "firebase/database";
 
-const PermissionModal = ({ setShowPermissionModal }) => {
+const PermissionModal = ({
+  setShowPermissionModal,
+  updateUserData,
+  userData,
+}) => {
   const [visible, setVisible] = useState(true);
   const [permissionType, setPermissionType] = useState("permanent");
   const [newRFID, setNewRFID] = useState("");
-  const [timeRange, setTimeRange] = useState("5 minutes");
+  const [timeRange, setTimeRange] = useState("20000");
 
-  const handleModal = () => {
-    console.log("Permission Type:", permissionType);
-    console.log("New RFID:", newRFID);
-    console.log("Time Range:", timeRange);
+  const handleModal = async () => {
+    // console.log("Permission Type:", permissionType);
+    // console.log("New RFID:", newRFID);
+    // console.log("Time Range:", timeRange);
+    const rfid = localStorage.getItem("old_rfid");
+    const uniqueKeyword = localStorage.getItem("unique");
+    const database = getDatabase();
     if (permissionType === "permanent") {
       toast.success(`Permission Granted to RFID ${newRFID}`);
+      await set(ref(database, `users/${uniqueKeyword}/rfidUid`), newRFID);
+      localStorage.setItem("old_rfid", newRFID);
     } else {
-      toast.success(`Permission Granted to RFID ${newRFID} for ${timeRange}`);
+      // const timeInMillis = getTimeInMillis(timeRange);
+      setTimeout(async () => {
+        await set(ref(database, `users/${uniqueKeyword}/rfidUid`), rfid);
+        console.log("time  vvdf", timeRange);
+        toast.info(
+          `Temporary access for RFID ${newRFID} expired. Reverted to original RFID.`
+        );
+        const updatedUserData = { ...userData, rfidUid: rfid };
+        updateUserData(updatedUserData);
+      }, timeRange);
+      toast.success(`Permission Granted to RFID ${newRFID}`);
+      // await set(ref(database, `users/${uniqueKeyword}/rfidUid`), newRFID);
     }
     setShowPermissionModal(false);
+    const updatedUserData = { ...userData, rfidUid: newRFID };
+    updateUserData(updatedUserData);
   };
 
   return (
@@ -83,8 +106,8 @@ const PermissionModal = ({ setShowPermissionModal }) => {
                 onChange={(e) => setTimeRange(e.target.value)}
                 className="block w-full border-gray-300 rounded-md"
               >
-                <option value="5 minutes">5 minutes</option>
-                <option value="10 minutes">10 minutes</option>
+                <option value="20000">20 seconds</option>
+                <option value="50000">50 seconds</option>
               </select>
             </div>
           )}
