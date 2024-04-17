@@ -6,6 +6,7 @@ const PermissionModal = ({
   setShowPermissionModal,
   updateUserData,
   userData,
+  setHistoryData,
 }) => {
   const [visible, setVisible] = useState(true);
   const [permissionType, setPermissionType] = useState("permanent");
@@ -16,6 +17,15 @@ const PermissionModal = ({
     // console.log("Permission Type:", permissionType);
     // console.log("New RFID:", newRFID);
     // console.log("Time Range:", timeRange);
+    setHistoryData((prevData) => [
+      ...prevData,
+      {
+        permission: permissionType,
+        rfid: newRFID,
+        date: new Date().toLocaleDateString(),
+        time: new Date().toLocaleTimeString(),
+      },
+    ]);
     const rfid = localStorage.getItem("old_rfid");
     const uniqueKeyword = localStorage.getItem("unique");
     const database = getDatabase();
@@ -45,12 +55,16 @@ const PermissionModal = ({
     updateUserData(updatedUserData);
   };
 
+  const handleModalOnce = () => {
+    setShowPermissionModal(false);
+  };
+
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 rounded-lg p-4">
       <div className="modal-container">
         <div className="bg-white border-2 border-purple-600 rounded-lg p-6">
           <button
-            onClick={handleModal}
+            onClick={handleModalOnce}
             className="float-right text-gray-400 hover:text-gray-800"
           >
             &#10006;

@@ -9,12 +9,15 @@ import ThemeContext from "../utils/ThemeContext";
 import PermissionModal from "./PermissionModal";
 import { db } from "../utils/firebase";
 import { storage } from "../utils/firebase";
+import HistoryTable from "./HistoryTable";
 
 const UserProfile = () => {
   const { theme } = useContext(ThemeContext);
   const [userData, setUserData] = useState({});
   const [userImage, setUserImage] = useState(null);
   const [showPermissionModal, setShowPermissionModal] = useState(false);
+  const [historyData, setHistoryData] = useState([]);
+  const [showTable, setShowTable] = useState(false);
 
   useEffect(() => {
     // Fetch the unique keyword from LocalStorage
@@ -74,6 +77,10 @@ const UserProfile = () => {
     setUserData(newUserData);
   };
 
+  const showHistoryTable = () => {
+    setShowTable(!showTable);
+  };
+
   if (!localStorage.getItem("unique")) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-400 text-white">
@@ -127,21 +134,35 @@ const UserProfile = () => {
             <span className="font-semibold">RFID UID:</span> {userData?.rfidUid}
           </p>
         </div>
-        <button
-          className={`bg-purple-600 hover:bg-purple-700 font-bold py-2 px-2 rounded focus:outline-none focus:shadow-outline ${
-            theme === false ? "text-white" : "text-black"
-          }`}
-          onClick={handleGeneratePermission}
-        >
-          Generate Permission
-        </button>
+        <div>
+          <button
+            className={`bg-purple-600 hover:bg-purple-700 font-bold py-2 px-2 rounded focus:outline-none focus:shadow-outline ${
+              theme === false ? "text-white" : "text-black"
+            }`}
+            onClick={handleGeneratePermission}
+          >
+            Generate Permission
+          </button>
+          <button
+            onClick={showHistoryTable}
+            className={`bg-purple-600 hover:bg-purple-700 font-bold py-2 px-4 rounded mx-3 focus:outline-none focus:shadow-outline ${
+              theme === false ? "text-white" : "text-black"
+            }`}
+          >
+            Check History
+          </button>
+        </div>
       </div>
       {showPermissionModal && (
         <PermissionModal
           setShowPermissionModal={setShowPermissionModal}
           updateUserData={updateUserData}
           userData={userData}
+          setHistoryData={setHistoryData}
         />
+      )}
+      {showTable && (
+        <HistoryTable historyData={historyData} setShowTable={setShowTable} />
       )}
     </div>
   );
