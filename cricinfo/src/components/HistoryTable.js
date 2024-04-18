@@ -1,12 +1,35 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useContext } from "react";
 import ThemeContext from "../utils/ThemeContext";
+import { get, getDatabase, ref } from "firebase/database";
 
-const HistoryTable = ({ historyData, setShowTable }) => {
+const HistoryTable = ({ setShowTable }) => {
   const { theme } = useContext(ThemeContext);
+  const [data, setData] = useState([]);
   const handleModalOnce = () => {
     setShowTable(false);
   };
+
+  useEffect(() => {
+    const uniqueKeyword = localStorage.getItem("unique");
+    if (uniqueKeyword) {
+      const db = getDatabase();
+      const userRef = ref(db, `users/${uniqueKeyword}/history`);
+      get(userRef)
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            const historyUserData = snapshot.val();
+            console.log("dataa: ", historyUserData);
+            setData(Array.from(historyUserData));
+          } else {
+            console.log("User data not found.");
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+        });
+    }
+  }, []);
 
   return (
     <div
@@ -14,7 +37,7 @@ const HistoryTable = ({ historyData, setShowTable }) => {
         theme === false ? "bg-white text-black-700" : "bg-black text-white"
       } `}
     >
-      <div className="flex justify-between">
+      <div className="flex justify-between w-full mb-4">
         <h2
           className={`text-xl font-bold ${
             theme === false ? "bg-white text-black-700" : "bg-black text-white"
@@ -29,7 +52,7 @@ const HistoryTable = ({ historyData, setShowTable }) => {
           &#10006;
         </button>
       </div>
-      {historyData.length === 0 ? (
+      {data.length === 0 ? (
         <p className="text-center">No data to display</p>
       ) : (
         <table
@@ -93,7 +116,7 @@ const HistoryTable = ({ historyData, setShowTable }) => {
             </tr>
           </thead>
           <tbody>
-            {historyData.map((item, index) => (
+            {data.map((item, index) => (
               <tr key={index} className="bg-gray-100">
                 <td
                   className={`border  px-4 py-2

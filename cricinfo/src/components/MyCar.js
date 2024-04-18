@@ -16,7 +16,7 @@ const UserProfile = () => {
   const [userData, setUserData] = useState({});
   const [userImage, setUserImage] = useState(null);
   const [showPermissionModal, setShowPermissionModal] = useState(false);
-  const [historyData, setHistoryData] = useState([]);
+  // const [historyData, setHistoryData] = useState([]);
   const [showTable, setShowTable] = useState(false);
 
   useEffect(() => {
@@ -158,12 +158,9 @@ const UserProfile = () => {
           setShowPermissionModal={setShowPermissionModal}
           updateUserData={updateUserData}
           userData={userData}
-          setHistoryData={setHistoryData}
         />
       )}
-      {showTable && (
-        <HistoryTable historyData={historyData} setShowTable={setShowTable} />
-      )}
+      {showTable && <HistoryTable setShowTable={setShowTable} />}
     </div>
   );
 };

@@ -15,6 +15,7 @@ const Blogs = lazy(() => import("../src/components/Blogs"));
 const Videos = lazy(() => import("../src/components/Videos"));
 const Register = lazy(() => import("../src/components/Register"));
 const Login = lazy(() => import("../src/components/Login"));
+const Feedback = lazy(() => import("../src/components/Feedback"));
 const router = createBrowserRouter([
   {
     path: "/",
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
       {
         path: "/mycar",
         element: <MyCar />,
+      },
+      {
+        path: "/feedback",
+        element: <Feedback />,
       },
       {
         path: "/login",

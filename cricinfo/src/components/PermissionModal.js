@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { getDatabase, ref, set } from "firebase/database";
+import { push, get } from "firebase/database";
 
 const PermissionModal = ({
   setShowPermissionModal,
   updateUserData,
   userData,
-  setHistoryData,
 }) => {
   const [visible, setVisible] = useState(true);
   const [permissionType, setPermissionType] = useState("permanent");
@@ -17,18 +17,38 @@ const PermissionModal = ({
     // console.log("Permission Type:", permissionType);
     // console.log("New RFID:", newRFID);
     // console.log("Time Range:", timeRange);
-    setHistoryData((prevData) => [
-      ...prevData,
-      {
+    const rfid = localStorage.getItem("old_rfid");
+    const uniqueKeyword = localStorage.getItem("unique");
+    const database = getDatabase();
+    // Get the previous data in history from db
+    const historyRef = ref(database, `users/${uniqueKeyword}/history`);
+    const historySnapshot = await get(historyRef);
+    if (historySnapshot.val()) {
+      // console.log("hsssss ", historySnapshot.val());
+      let existingHistory = Array.from(historySnapshot.val()) || []; // Initialize as empty array if no data found
+      // Now append new data into previous one
+      const newPermission = {
         permission: permissionType,
         rfid: newRFID,
         date: new Date().toLocaleDateString(),
         time: new Date().toLocaleTimeString(),
-      },
-    ]);
-    const rfid = localStorage.getItem("old_rfid");
-    const uniqueKeyword = localStorage.getItem("unique");
-    const database = getDatabase();
+      };
+      existingHistory.push(newPermission);
+      // Now we do not need this setHistoryData component below as we are now directly calling the database and getting the history data and showing up
+      // setHistoryData(existingHistory);
+      // and push the old + new data as whole inside db
+      await set(
+        ref(database, `users/${uniqueKeyword}/history`),
+        existingHistory
+      );
+    } else {
+      await set(ref(database, `users/${uniqueKeyword}/history`), {
+        permission: permissionType,
+        rfid: newRFID,
+        date: new Date().toLocaleDateString(),
+        time: new Date().toLocaleTimeString(),
+      });
+    }
     if (permissionType === "permanent") {
       toast.success(`Permission Granted to RFID ${newRFID}`);
       await set(ref(database, `users/${uniqueKeyword}/rfidUid`), newRFID);

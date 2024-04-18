@@ -56,6 +56,12 @@ const Header = () => {
         >
           My Car
         </Link>
+        <Link
+          to="/feedback"
+          className="text-black text-decoration-none hover:border border-purple-900 hover:rounded-lg p-2 font-bold"
+        >
+          Contact Us
+        </Link>
       </div>
 
       {/* Right Section - Login, Signup, and Dark/Light Mode Button */}
