@@ -23,7 +23,7 @@ const Blogs = () => {
     const res = await data.json();
     setArticles(res.articles);
     // console.log("articles ", res.articles);
-    // setFilteredArticles(res.articles);
+    setFilteredArticles(res.articles);
     // console.log("filter articles ", filteredArticles);
     setIsLoading(false);
   };
