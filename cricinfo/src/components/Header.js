@@ -57,7 +57,7 @@ const Header = () => {
           My Car
         </Link>
         <Link
-          to="/feedback"
+          to="/Feedback"
           className="text-black text-decoration-none hover:border border-purple-900 hover:rounded-lg p-2 font-bold"
         >
           Contact Us

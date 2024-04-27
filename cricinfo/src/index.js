@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
+import Feedback from "../src/components/Feedback";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import MyCar from "./components/MyCar";
 import ErrorPage from "./components/ErrorPage";
@@ -15,7 +16,7 @@ const Blogs = lazy(() => import("../src/components/Blogs"));
 const Videos = lazy(() => import("../src/components/Videos"));
 const Register = lazy(() => import("../src/components/Register"));
 const Login = lazy(() => import("../src/components/Login"));
-const Feedback = lazy(() => import("../src/components/Feedback"));
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -47,7 +48,7 @@ const router = createBrowserRouter([
         element: <MyCar />,
       },
       {
-        path: "/feedback",
+        path: "/Feedback",
         element: <Feedback />,
       },
       {
