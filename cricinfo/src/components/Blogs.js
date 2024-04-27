@@ -22,6 +22,7 @@ const Blogs = () => {
     );
     const res = await data.json();
     setArticles(res.articles);
+    console.log("articles ", res.articles);
     setFilteredArticles(res.articles);
     console.log("filter articles ", filteredArticles);
     setIsLoading(false);
@@ -83,7 +84,11 @@ const Blogs = () => {
 
           {filteredArticles.length === 0 ? (
             <div className="flex items-center justify-center min-h-screen">
-              <NoContentMessage />
+              <h1>
+                The Data cannot be shown because the API does has CORD policy
+                which does not allows data to be fetched from sources other than
+                localhost
+              </h1>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
