@@ -21,8 +21,13 @@ const Blogs = () => {
       `https://newsapi.org/v2/everything?q=road%20accidents%20road%20safety&sortBy=publishedAt&apiKey=${apiKey}&pageSize=50&page=1`
     );
     const res = await data.json();
-    setArticles(res.articles);
-    setFilteredArticles(res.articles);
+    if (res.articles) {
+      setArticles(res.articles);
+      setFilteredArticles(res.articles);
+    } else {
+      setArticles([]);
+      setFilteredArticles([]);
+    }
     setIsLoading(false);
   };
 
@@ -82,7 +87,7 @@ const Blogs = () => {
           </div>
 
           {filteredArticles.length === 0 ? (
-            <div className="flex items-center justify-center h-64 bg-purple-600 p-5 fw-bold">
+            <div className="min-h-screen flex items-center justify-center h-64 bg-purple-600 p-5 fw-bold">
               <h2>
                 The Data cannot be shown because the API does has CORS Policy
                 which does not allow data to be fetched from sources other than
