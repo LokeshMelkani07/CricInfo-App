@@ -134,9 +134,9 @@ const UserProfile = () => {
             <span className="font-semibold">RFID UID:</span> {userData?.rfidUid}
           </p>
         </div>
-        <div>
+        <div className="flex flex-col md:flex-row justify-center items-center">
           <button
-            className={`bg-purple-600 hover:bg-purple-700 font-bold py-2 px-2 rounded focus:outline-none focus:shadow-outline ${
+            className={`bg-purple-600 hover:bg-purple-700 font-bold py-2 px-2 rounded mb-2 md:mb-0 md:mr-2 focus:outline-none focus:shadow-outline mt-2 ${
               theme === false ? "text-white" : "text-black"
             }`}
             onClick={handleGeneratePermission}
@@ -145,11 +145,11 @@ const UserProfile = () => {
           </button>
           <button
             onClick={showHistoryTable}
-            className={`bg-purple-600 hover:bg-purple-700 font-bold py-2 px-4 rounded mx-3 focus:outline-none focus:shadow-outline ${
+            className={`bg-purple-600 hover:bg-purple-700 font-bold py-2 px-4 mt-0 rounded focus:outline-none focus:shadow-outline ${
               theme === false ? "text-white" : "text-black"
             }`}
           >
-            Check History
+            {showTable ? "Hide History" : "Check History"}
           </button>
         </div>
       </div>

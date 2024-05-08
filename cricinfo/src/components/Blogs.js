@@ -22,9 +22,7 @@ const Blogs = () => {
     );
     const res = await data.json();
     setArticles(res.articles);
-    // console.log("articles ", res.articles);
     setFilteredArticles(res.articles);
-    // console.log("filter articles ", filteredArticles);
     setIsLoading(false);
   };
 
@@ -32,7 +30,6 @@ const Blogs = () => {
     const filteredData = articles.filter((article) =>
       article?.title?.toLowerCase()?.includes(text?.toLowerCase())
     );
-
     return filteredData;
   }
 
@@ -44,12 +41,12 @@ const Blogs = () => {
         theme === false ? "bg-white text-black-700" : "bg-black text-white"
       }`}
     >
-      {isLoading == true ? (
+      {isLoading === true ? (
         <div className="flex flex-row flex-wrap">
           {Array(10)
             .fill("")
-            .map(() => (
-              <ShimmerCard />
+            .map((_, index) => (
+              <ShimmerCard key={index} />
             ))}
         </div>
       ) : (
@@ -57,7 +54,7 @@ const Blogs = () => {
           <h1 className="text-3xl font-extrabold mb-4 mx-4 text-purple-600 py-4">
             Latest News
           </h1>
-          <div className="flex flex-col md:flex-row items-center md:items-start mb-4 mx-4">
+          <div className="flex flex-col md:flex-row items-center md:items-start mb-4 md:mt-0 mx-4">
             <input
               type="text"
               name="search"
@@ -71,7 +68,9 @@ const Blogs = () => {
               placeholder="Search news..."
             />
             <button
-              className=" md:mt-0 md:ml-4 py-2 px-6 bg-purple-600 text-white rounded-full hover:bg-purple-700 transition duration-300"
+              className={`md:mt-0 md:ml-4 mt-2 py-2 px-6 bg-purple-600 text-white rounded-full hover:bg-purple-700 transition duration-300 ${
+                theme === false ? "mt-0" : "mt-2 md:mt-0" // Conditionally set top margin
+              }`}
               onClick={() => {
                 const data = filterData(articles, searchText);
                 setFilteredArticles(data);
@@ -86,12 +85,12 @@ const Blogs = () => {
             <div className="flex items-center justify-center h-64 bg-purple-600 p-5 fw-bold">
               <h2>
                 The Data cannot be shown because the API does has CORS Policy
-                which does not allows data to be fetched from sources other than
+                which does not allow data to be fetched from sources other than
                 localhost
               </h2>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mx-4">
               {filteredArticles?.map((article, index) => (
                 <Cards key={index} article={article} />
               ))}

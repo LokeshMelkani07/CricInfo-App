@@ -6,9 +6,6 @@ import { get, getDatabase, ref } from "firebase/database";
 const HistoryTable = ({ setShowTable }) => {
   const { theme } = useContext(ThemeContext);
   const [data, setData] = useState([]);
-  const handleModalOnce = () => {
-    setShowTable(false);
-  };
 
   useEffect(() => {
     const uniqueKeyword = localStorage.getItem("unique");
@@ -19,7 +16,6 @@ const HistoryTable = ({ setShowTable }) => {
         .then((snapshot) => {
           if (snapshot.exists()) {
             const historyUserData = snapshot.val();
-            console.log("dataa: ", historyUserData);
             setData(Array.from(historyUserData));
           } else {
             console.log("User data not found.");
@@ -31,20 +27,13 @@ const HistoryTable = ({ setShowTable }) => {
     }
   }, []);
 
+  const handleModalOnce = () => {
+    setShowTable(false);
+  };
+
   return (
-    <div
-      className={`max-w-xl ml-auto mr-auto mt-10 mb-10 fixed inset-0 flex flex-col items-center justify-center z-10 rounded-lg p-4 overflow-scroll ${
-        theme === false ? "bg-white text-black-700" : "bg-black text-white"
-      } `}
-    >
-      <div className="flex justify-between w-full mb-4">
-        <h2
-          className={`text-xl font-bold ${
-            theme === false ? "bg-white text-black-700" : "bg-black text-white"
-          } `}
-        >
-          Permission History
-        </h2>
+    <div className={`max-w-xl mx-auto mt-10 mb-10 relative`}>
+      <div className="absolute top-0 right-0 p-2">
         <button
           onClick={handleModalOnce}
           className="text-gray-400 hover:text-gray-800"
@@ -52,126 +41,57 @@ const HistoryTable = ({ setShowTable }) => {
           &#10006;
         </button>
       </div>
-      {data.length === 0 ? (
-        <p className="text-center">No data to display</p>
-      ) : (
-        <table
-          className={`w-full border-collapse border border-gray-800 overflow-scroll
-        ${
-          theme === false ? "bg-white text-black-700" : "bg-black text-white"
-        } `}
-        >
-          <thead>
-            <tr className="bg-gray-200">
-              <th
-                className={`border px-4
-                py-2 ${
-                  theme === false
-                    ? "bg-white text-black-700"
-                    : "bg-black text-white"
-                } `}
-              >
-                S.No
-              </th>
-              <th
-                className={`border px-4 py-2
-              ${
-                theme === false
-                  ? "bg-white text-black-700"
-                  : "bg-black text-white"
-              } `}
-              >
-                Permission Type
-              </th>
-              <th
-                className={`border  px-4 py-2
-              ${
-                theme === false
-                  ? "bg-white text-black-700"
-                  : "bg-black text-white"
-              } `}
-              >
-                RFID
-              </th>
-              <th
-                className={`border  px-4 py-2
-              ${
-                theme === false
-                  ? "bg-white text-black-700"
-                  : "bg-black text-white"
-              } `}
-              >
-                Date
-              </th>
-              <th
-                className={`border  px-4 py-2
-              ${
-                theme === false
-                  ? "bg-white text-black-700"
-                  : "bg-black text-white"
-              } `}
-              >
-                Time
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((item, index) => (
-              <tr key={index} className="bg-gray-100">
-                <td
-                  className={`border  px-4 py-2
-              ${
-                theme === false
-                  ? "bg-white text-black-700"
-                  : "bg-black text-white"
-              } `}
-                >
-                  {index + 1}
-                </td>
-                <td
-                  className={`border  px-4 py-2
-              ${
-                theme === false
-                  ? "bg-white text-black-700"
-                  : "bg-black text-white"
-              } `}
-                >
-                  {item.permission}
-                </td>
-                <td
-                  className={`border  px-4 py-2
-              ${
-                theme === false
-                  ? "bg-white text-black-700"
-                  : "bg-black text-white"
-              } `}
-                >
-                  {item.rfid}
-                </td>
-                <td
-                  className={`border  px-4 py-2
-              ${
-                theme === false
-                  ? "bg-white text-black-700"
-                  : "bg-black text-white"
-              } `}
-                >
-                  {item.date}
-                </td>
-                <td
-                  className={`border  px-4 py-2
-              ${
-                theme === false
-                  ? "bg-white text-black-700"
-                  : "bg-black text-white"
-              } `}
-                >
-                  {item.time}
-                </td>
+      {data.length > 0 && (
+        <div className="overflow-x-auto">
+          <table className={`w-full border-collapse border border-gray-800`}>
+            <thead>
+              <tr className="bg-gray-200">
+                <th className={`border px-2 py-1 text-sm md:px-4 md:py-2`}>
+                  S.No
+                </th>
+                <th className={`border px-2 py-1 text-sm md:px-4 md:py-2`}>
+                  Permission Type
+                </th>
+                <th className={`border px-2 py-1 text-sm md:px-4 md:py-2`}>
+                  RFID
+                </th>
+                <th className={`border px-2 py-1 text-sm md:px-4 md:py-2`}>
+                  Date
+                </th>
+                <th className={`border px-2 py-1 text-sm md:px-4 md:py-2`}>
+                  Time
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {data.map((item, index) => (
+                <tr
+                  key={index}
+                  className={`${index % 2 === 0 ? "bg-gray-100" : "bg-white"}`}
+                >
+                  <td className={`border px-2 py-1 text-sm md:px-4 md:py-2`}>
+                    {index + 1}
+                  </td>
+                  <td className={`border px-2 py-1 text-sm md:px-4 md:py-2`}>
+                    {item.permission}
+                  </td>
+                  <td className={`border px-2 py-1 text-sm md:px-4 md:py-2`}>
+                    {item.rfid}
+                  </td>
+                  <td className={`border px-2 py-1 text-sm md:px-4 md:py-2`}>
+                    {item.date}
+                  </td>
+                  <td className={`border px-2 py-1 text-sm md:px-4 md:py-2`}>
+                    {item.time}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+      {data.length === 0 && (
+        <p className="text-center mt-4">No data to display</p>
       )}
     </div>
   );
