@@ -4,7 +4,7 @@ const VideoCard = ({ video }) => {
   const { id, snippet } = video;
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-4 m-4 style={{ width: '200px' }}">
+    <div className="bg-white rounded-lg shadow-md p-4 m-4 md:w-64">
       <div className="mb-4">
         <iframe
           title={snippet.title}

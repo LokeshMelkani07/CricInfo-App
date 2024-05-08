@@ -25,23 +25,23 @@ const Videos = () => {
     setIsLoading(false);
   };
 
-  return isLoading == true ? (
+  return isLoading ? (
     <div className="flex flex-row flex-wrap">
       {Array(10)
         .fill("")
-        .map(() => (
-          <ShimmerCard />
+        .map((_, index) => (
+          <ShimmerCard key={index} />
         ))}
     </div>
   ) : (
-    <div
-      className={`flex container mt-2 mb-2 flex-wrap ${
-        theme === false ? "bg-white text-black-700" : "bg-black text-white"
-      }`}
-    >
-      <div>
-        {videos?.map((ele) => (
-          <VideoCard video={ele} />
+    <div className="container mx-auto mt-2 mb-2">
+      <div
+        className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ${
+          theme === false ? "bg-white text-black-700" : "bg-black text-white"
+        }`}
+      >
+        {videos.map((ele) => (
+          <VideoCard key={ele.id.videoId} video={ele} />
         ))}
       </div>
     </div>
