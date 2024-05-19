@@ -43,6 +43,6 @@ Demo Images:
 
 Demo Videos:
 
-Part 1: Uploading 1stpart_ZMx2xs8p(1).mp4…
-Part 2: Uploading 2ndpart_OEDYPzWx.mp4…
+Part 1: https://drive.google.com/file/d/1RI1Uo39dDhujh3R3boS3i3jYn1-BIj3U/view?usp=sharing
+Part 2: https://drive.google.com/file/d/1wdJWqJPct3ddAlk5PuLNmFI3S8nwAbJJ/view?usp=sharing
 
